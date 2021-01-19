@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const userRoutes = require("./routes/user");
 const sauceRoutes = require("./routes/sauce");
 mongoose
-  .connect("mongodb+srv://danielvenera:dDla0D7p9jwBayZl@cluster0.e9cel.mongodb.net/<dbname>?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect("mongodb+srv://seconduser:KRTamOrxlG3CZw6s@cluster0.e9cel.mongodb.net/hotsauce?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
 
