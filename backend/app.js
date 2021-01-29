@@ -1,4 +1,11 @@
 require('dotenv').config();
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 100 
+});
+var clean = require('xss-clean/lib/xss').clean
+var cleaned = clean('<script></script>');
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -20,6 +27,7 @@ app.use((req, res, next) => {
 });
 app.use(helmet());
 app.use(bodyParser.json());
+app.use(limiter);
 //routes user
 app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api/auth", userRoutes);

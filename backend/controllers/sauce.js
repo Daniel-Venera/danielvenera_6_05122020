@@ -1,3 +1,4 @@
+const fs = require('fs');
 const Sauce = require("../models/Sauce");
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce);
@@ -48,12 +49,24 @@ exports.getOneSauce = (req, res, next) => {
     });
 };
 exports.updateOneSauce = (req, res, next) => {
+  console.log(req.params.id)
+  console.log(req.file);
   const sauceObject = req.file
     ? {
         ...JSON.parse(req.body.sauce),
         imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
       }
     : { ...req.body };
+    if (req.file) {
+      Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+        const filename = sauce.imageUrl.split('/images/')[1];
+        fs.unlink(`images/${filename}`, function (err) {
+          if (err) throw err;
+        });
+        })
+        .catch(error => res.status(500).json({ error }));
+    } 
     if (sauceObject.name.length > 50) {
       return res.status(400).json({error: 'le nom de la sauce doit contenir 50 caractères maximum'})
     } else if (sauceObject.manufacturer.length > 50) {
@@ -82,13 +95,16 @@ exports.getAllSauces = (req, res, next) => {
     });
 };
 exports.deleteOneSauce = (req, res, next) => {
-  Sauce.deleteOne({ _id: req.params.id })
-    .then(() => {
-      res.status(200).json({ message: "Objet supprimé !" });
+  Sauce.findOne({ _id: req.params.id })
+    .then(sauce => {
+      const filename = sauce.imageUrl.split('/images/')[1];
+      fs.unlink(`images/${filename}`, () => {
+        Sauce.deleteOne({ _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .catch(error => res.status(400).json({ error }));
+      });
     })
-    .catch(error => {
-      res.status(400).json(error);
-    });
+    .catch(error => res.status(500).json({ error }));
 };
 exports.createLikeOneSauce = (req, res, next) => {
   switch (req.body.like) {

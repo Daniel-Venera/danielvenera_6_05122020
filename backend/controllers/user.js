@@ -15,7 +15,6 @@ exports.signup = (req, res, next) => {
   if (!schema.validate(req.body.password)) {
     return res.status(400).json({error : 'Mot de passe non conforme : Votre mot doit contenir au moins 8 caractères avec une majuscule, une minuscule, 2 chiffres et aucun espace'});
   } else if (schema.validate(req.body.password)) {
-    console.log(mailRegex.test(req.body.email))
     if (mailRegex.test(req.body.email)) {
       bcrypt
       .hash(req.body.password, 10)
@@ -52,7 +51,7 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user._id,
             token: jwt.sign({ userId: user._id }, "RANDOM_TOKEN_SECRET", { expiresIn: "24h" })
-          }); 
+          });
         })
         .catch(error => res.status(500).json({ error }));
     })

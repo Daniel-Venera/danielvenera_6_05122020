@@ -7,4 +7,4 @@ ng serve
 * Run the node server (localhost:3000) *
 cd backend 
 npm install
-nodemon server
+nodemon server 
