@@ -1,5 +1,5 @@
-INSTALL<br>
-* Run the development server (localhost:4200) * 
+INSTALL
+<br>* Run the development server (localhost:4200) * 
 <br>npm install -g @angular/cli
 <br>cd frontend
 <br>npm install
